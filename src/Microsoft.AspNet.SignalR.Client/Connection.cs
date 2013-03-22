@@ -2,6 +2,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
@@ -9,6 +10,7 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Reflection;
+// using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -209,6 +211,13 @@ namespace Microsoft.AspNet.SignalR.Client
         /// Gets or sets authentication information for the connection.
         /// </summary>
         public ICredentials Credentials { get; set; }
+
+        /// <summary>
+        /// Gets and sets headers for the request
+        /// </summary>
+        public IDictionary<string, string> Headers { get; set; }
+
+        //public X509CertificateCollection ClientCertificates { get; set; }
 
 #if !SILVERLIGHT
         /// <summary>
@@ -638,6 +647,18 @@ namespace Microsoft.AspNet.SignalR.Client
             {
                 request.CookieContainer = CookieContainer;
             }
+
+            // Headers should never be null
+            if (Headers != null)
+            {
+                request.Headers = Headers;
+            }
+
+            //if (ClientCertificates != null)
+            //{
+            //    request.ClientCertificates = ClientCertificates;
+            //}
+
 #if !SILVERLIGHT
             if (Proxy != null)
             {

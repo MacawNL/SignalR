@@ -1,5 +1,7 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.md in the project root for license information.
 
+using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Net;
 using System.Net.WebSockets;
 using Microsoft.AspNet.SignalR.Client.Http;
@@ -48,6 +50,18 @@ namespace Microsoft.AspNet.SignalR.Client.Transports
             set
             {
                 _clientWebSocket.Options.Cookies = value;
+            }
+        }
+
+        public IDictionary<string, string> Headers
+        {
+            get
+            {
+                return null;
+            }
+            set
+            {
+                _clientWebSocket.Options.SetRequestHeader(null, null);
             }
         }
 

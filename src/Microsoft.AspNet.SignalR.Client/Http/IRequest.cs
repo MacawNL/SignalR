@@ -1,6 +1,9 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.md in the project root for license information.
 
+using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Net;
+// using System.Security.Cryptography.X509Certificates;
 
 namespace Microsoft.AspNet.SignalR.Client.Http
 {
@@ -23,6 +26,16 @@ namespace Microsoft.AspNet.SignalR.Client.Http
         /// The cookies for this request.
         /// </summary>
         CookieContainer CookieContainer { get; set; }
+
+        /// <summary>
+        /// Headers for this request
+        /// </summary>
+        IDictionary<string, string> Headers { get; set; }
+
+        ///// <summary>
+        ///// Client Certificates for this request
+        ///// </summary>
+        //X509CertificateCollection ClientCertificates { get; set; }
 
 #if !SILVERLIGHT
         /// <summary>

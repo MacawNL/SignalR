@@ -2,6 +2,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Net;
@@ -28,8 +29,10 @@ namespace Microsoft.AspNet.SignalR.Client
 
         bool ChangeState(ConnectionState oldState, ConnectionState newState);
 
+        IDictionary<string, string> Headers { get; set; }
         ICredentials Credentials { get; set; }
         CookieContainer CookieContainer { get; set; }
+        //X509CertificateCollection ClientCertificates { get; set; }
         TextWriter Trace { get; }
         JsonSerializer JsonSerializer { get; }
 

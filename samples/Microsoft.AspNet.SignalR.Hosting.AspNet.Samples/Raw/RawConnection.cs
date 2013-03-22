@@ -11,6 +11,12 @@ namespace Microsoft.AspNet.SignalR.Samples.Raw
         private static readonly ConcurrentDictionary<string, string> _users = new ConcurrentDictionary<string, string>();
         private static readonly ConcurrentDictionary<string, string> _clients = new ConcurrentDictionary<string, string>();
 
+        public override Task ProcessRequest(Hosting.HostContext context)
+        {
+            var request = context.Request.Headers.GetValues("Accept");
+            var header = context.Request.Headers.GetValues("test-header");
+            return base.ProcessRequest(context);
+        }
         protected override Task OnConnected(IRequest request, string connectionId)
         {
             Cookie userNameCookie;
