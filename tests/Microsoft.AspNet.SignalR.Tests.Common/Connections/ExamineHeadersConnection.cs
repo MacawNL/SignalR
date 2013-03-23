@@ -11,7 +11,7 @@ namespace Microsoft.AspNet.SignalR.FunctionalTests
         {
             if (IsSendRequest(context.Request))
             {
-                _acceptHeader = context.Request.Headers.GetValues(System.Net.HttpRequestHeader.Accept.ToString())[0];
+                // _acceptHeader = context.Request.Headers.GetValues(System.Net.HttpRequestHeader.Accept.ToString())[0];
                 _testHeader = context.Request.Headers.GetValues("test-header")[0];
             }
             return base.ProcessRequest(context);

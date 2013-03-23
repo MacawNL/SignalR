@@ -7,12 +7,12 @@ using Newtonsoft.Json.Linq;
 using Xunit;
 using Xunit.Extensions;
 
-
 namespace Microsoft.AspNet.SignalR.Tests
 {
     public class ConnectionFacts : HostedTest
     {
         [Theory]
+        //[InlineData(HostType.IISExpress, TransportType.Websockets)]
         [InlineData(HostType.IISExpress, TransportType.ServerSentEvents)]
         public void RequestHeadersSetCorrectly(HostType hostType, TransportType transportType)
         {
@@ -26,7 +26,7 @@ namespace Microsoft.AspNet.SignalR.Tests
                 connection.Received += (arg) =>
                 {
                     JObject headers = JsonConvert.DeserializeObject<JObject>(arg);
-                    Assert.Equal("accept", (string) headers["acceptHeader"]);
+                    // Assert.Equal("accept", (string) headers["acceptHeader"]);
                     Assert.Equal("test-header", (string) headers["testHeader"]);
                     mre.Set();
                 };
@@ -35,7 +35,7 @@ namespace Microsoft.AspNet.SignalR.Tests
 
                 // Setting headers
                 connection.Headers = new Dictionary<string, string>();
-                connection.Headers.Add(System.Net.HttpRequestHeader.Accept.ToString(), "accept");
+                // connection.Headers.Add(System.Net.HttpRequestHeader.Accept.ToString(), "accept");
                 connection.Headers.Add("test-header", "test-header");
 
                 connection.Send("Hello");

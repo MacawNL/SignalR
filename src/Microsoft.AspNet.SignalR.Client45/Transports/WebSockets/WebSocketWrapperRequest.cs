@@ -3,6 +3,7 @@
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Net;
+using System;
 using System.Net.WebSockets;
 using Microsoft.AspNet.SignalR.Client.Http;
 
@@ -11,6 +12,7 @@ namespace Microsoft.AspNet.SignalR.Client.Transports
     internal class WebSocketWrapperRequest : IRequest
     {
         private readonly ClientWebSocket _clientWebSocket;
+        private readonly IDictionary<string, string> _headerDictionary = new Dictionary<string, string>();
 
         public WebSocketWrapperRequest(ClientWebSocket clientWebSocket)
         {
@@ -57,11 +59,20 @@ namespace Microsoft.AspNet.SignalR.Client.Transports
         {
             get
             {
-                return null;
+                return _headerDictionary;
             }
             set
             {
-                _clientWebSocket.Options.SetRequestHeader(null, null);
+                SetRequestHeader(value);
+            }
+        }
+
+        private void SetRequestHeader(IDictionary<string, string> dictHeader)
+        {
+            foreach (KeyValuePair<string, string> headerEntry in dictHeader)
+            {
+                _clientWebSocket.Options.SetRequestHeader(headerEntry.Key, headerEntry.Value);
+                _headerDictionary.Add(headerEntry.Key, headerEntry.Value);
             }
         }
 

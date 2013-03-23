@@ -2,9 +2,7 @@
 
 using System;
 using System.Collections.Generic;
-using System.Collections.Specialized;
 using System.Net;
-using System.Security.Cryptography.X509Certificates;
 
 namespace Microsoft.AspNet.SignalR.Client.Http
 {
@@ -15,16 +13,25 @@ namespace Microsoft.AspNet.SignalR.Client.Http
 
         private IDictionary<string, Action<HttpWebRequest, string>> _restrictedHeaderSet = new Dictionary<string, Action<HttpWebRequest, string>>() {
                                                                         { HttpRequestHeader.Accept.ToString(), (request, value) => { request.Accept = value; } },
-                                                                        { HttpRequestHeader.Connection.ToString(), (request, value) => { request.Connection = value; } },
+                                                                        
                                                                         { HttpRequestHeader.ContentType.ToString(), (request, value) => { request.ContentType = value; } },
-                                                                        { HttpRequestHeader.ContentLength.ToString(), (request, value) => { request.ContentLength = Int32.Parse(value); } },                                                                        
+                                                                        { HttpRequestHeader.ContentLength.ToString(), (request, value) => { request.ContentLength = Int32.Parse(value); } }, 
+#if (!WINDOWS_PHONE && !SILVERLIGHT)                                                                                                                                               
+                                                                        { HttpRequestHeader.Connection.ToString(), (request, value) => { request.Connection = value; } },
+                                                                        { HttpRequestHeader.Date.ToString(), (request, value) => {request.Date = DateTime.Parse(value); } },
+                                                                        { HttpRequestHeader.Expect.ToString(), (request, value) => {request.Expect = value;} },
+#endif
                                                                     };
 
         private IDictionary<string, Func<HttpWebRequest, string>> _restrictedHeaderGet = new Dictionary<string, Func<HttpWebRequest, string>>() {
                                                                         { HttpRequestHeader.Accept.ToString(), (request) => { return request.Accept; } },
-                                                                        { HttpRequestHeader.Connection.ToString(), (request) => { return request.Connection; } },
                                                                         { HttpRequestHeader.ContentType.ToString(), (request) => { return request.ContentType; } },
                                                                         { HttpRequestHeader.ContentLength.ToString(), (request) => { return request.ContentLength.ToString(); } },                                                                        
+#if (!WINDOWS_PHONE && !SILVERLIGHT)                                                                      
+                                                                        { HttpRequestHeader.Connection.ToString(), (request) => { return request.Connection; } },
+                                                                        { HttpRequestHeader.Date.ToString(), (request) => { return request.Date.ToString(); } },
+                                                                        { HttpRequestHeader.Expect.ToString(), (request) => { return request.Expect.ToString(); } },
+#endif
                                                                     };
 
         public HttpWebRequestWrapper(HttpWebRequest request)
@@ -104,12 +111,15 @@ namespace Microsoft.AspNet.SignalR.Client.Http
             {
                 if (!_restrictedHeaderSet.Keys.Contains(headerEntry.Key))
                 {
+#if (!WINDOWS_PHONE && !SILVERLIGHT)
                     _request.Headers.Add(headerEntry.Key, headerEntry.Value);
+#endif
                 }
                 else
                 {
                     Action<HttpWebRequest, string> action;
                     _restrictedHeaderSet.TryGetValue(headerEntry.Key, out action);
+
                     if (action != null)
                     {
                         action.Invoke(_request, headerEntry.Value);
